@@ -9,6 +9,9 @@ import static org.hamcrest.Matchers.*;
 
 import utils.ConfigReader;
 
+import io.qameta.allure.Step;
+import io.qameta.allure.Description;
+
 public class UserAPITests {
     static ConfigReader configReader;
 
@@ -19,6 +22,7 @@ public class UserAPITests {
     }
 
     @Test
+    @Description("Verify that we can get a list of users")
     public void testGetUsers() {
         RestAssured
                 .given()
@@ -30,6 +34,7 @@ public class UserAPITests {
     }
 
     @Test
+    @Description("Verify that we can get a user by ID")
     public void testGetUserById() {
         int userId = 1;
         Response response = RestAssured
@@ -42,3 +47,4 @@ public class UserAPITests {
                 .body("id", equalTo(userId));
     }
 }
+
