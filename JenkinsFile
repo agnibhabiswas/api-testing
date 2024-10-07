@@ -1,0 +1,45 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout') {
+            steps {
+                // Checkout the code from version control
+                git 'https://github.com/agnibhabiswas/api-testing.git'
+            }
+        }
+        stage('Build') {
+            steps {
+                // Build the project
+                sh 'mvn clean package'
+            }
+        }
+        stage('Run Tests') {
+            steps {
+                // Execute tests
+                sh 'mvn test'
+            }
+        }
+        stage('Generate Reports') {
+            steps {
+                // Generate test reports
+                sh 'mvn surefire-report:report'
+            }
+        }
+    }
+    post {
+        always {
+            // Archive the test results
+            junit 'target/surefire-reports/*.xml'
+            archiveArtifacts artifacts: 'target/site/surefire-report.html', allowEmptyArchive: true
+        }
+        success {
+            // Notify success
+            echo 'API Tests passed!'
+        }
+        failure {
+            // Notify failure
+            echo 'API Tests failed!'
+        }
+    }
+}
